@@ -1,5 +1,7 @@
 # quranjs
 
+<img src="./src/assets/test.png" alt="vue js quran web">
+
 ## Project setup
 ```
 npm install
