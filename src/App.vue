@@ -47,7 +47,7 @@ export default {
   methods: {
     run() {
       this.setMode(true)
-        axios.get('http://api.alquran.cloud/v1/surah')
+        axios.get('//api.alquran.cloud/v1/surah')
         .then(response => {
             this.surah = response.data.data;
         })

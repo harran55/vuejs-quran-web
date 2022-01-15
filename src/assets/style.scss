@@ -171,6 +171,9 @@ body {
             width: 20px;
             margin: 0 10px;
             display: inline-block;
+            svg {
+                color: var(--qjs-color);
+            }
         }
         span {
             color: var(--qjs-color);
@@ -184,6 +187,16 @@ body {
         color: var(--qjs-color);
         font-family: 'MeQuran';
         text-align: center;
+        input.page_number {
+            width: 60px;
+            font-family: sans-serif;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 5px;
+            background: var(--qjs-card);
+            color: var(--qjs-color);
+            border: 0;
+        }
         &.load {
             overflow: hidden;
             position: relative;

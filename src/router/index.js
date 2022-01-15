@@ -12,12 +12,6 @@ const routes = [
     component: Home,
   },
   {
-    path: "/page",
-    name: "Page",
-    component: () =>
-      import("../views/Page.vue"),
-  },
-  {
     path: '/:id',
     name: 'Surah',
     component: SurahAyah
