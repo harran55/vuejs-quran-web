@@ -4,20 +4,20 @@ import Home from "../views/Home.vue";
 import SurahAyah from '@/components/SurahAyah'
 
 Vue.use(VueRouter);
-
+const url = document.querySelector('meta[name=url]').getAttribute('content');
 const routes = [
   {
-    path: "/",
+    path: url,
     name: "Home",
     component: Home,
   },
   {
-    path: '/:id',
+    path: url + ':id',
     name: 'Surah',
     component: SurahAyah
   },
   {
-    path: '/:id/:ayah',
+    path: url + ':id/:ayah',
     name: 'SurahId',
     component: SurahAyah
   }

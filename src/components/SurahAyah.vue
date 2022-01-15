@@ -40,14 +40,25 @@
                     </svg>
                     <small>{{ val.text }} <input v-if="int == 1" type="number" v-model="inayah"></small>
                     </button>
+                    <button class="iplay" type="button" :variant="valTime ? 'primary' : ''">
+                        <svg @click="FunTimeStop()" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                            <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                            <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                            <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                        <small>
+                            فترة السكون
+                            <input type="number" v-model="timeStop">
+                        </small>
+                    </button>
                 </div>
-                <div class="ayah reader">
+                <div class="ayah reader" id="reader">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                         <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                     </svg>
-                    <div>
+                    <div id="list">
                         <ul class="list-unstyled m-0 p-0">
-                            <li v-for="(item, index) in arrayAudio" :key="index" :variant="item.identifier ==  $parent.settings.reader ? 'primary' : ''"
+                            <li v-for="(item, index) in arrayAudio" :key="index" :id="'li'+index" :variant="item.identifier ==  $parent.settings.reader ? 'primary' : ''"
                             @click="reReader(item.identifier)" :v-if="item.identifier != null">
                             {{ item.name }}
                             </li>
@@ -148,24 +159,41 @@ export default {
     name: 'SurahAyah',
     data() {
         return {
-            // quran: [],
+            // quran: [], // الاصدار القديم لجلب الآيات
             npage: [],
-            surah: [],
-            par: Number,
-            arrayAudio: jsonAudio.data,
-            page: 0,
-            ayah: 0,
-            inayah: 2,
-            set_save: false,
-            isPlay: false,
-            isLoad: false,
-            show: false,
-            tRead: Number,
-            volume: 100,
-            fontSize: 16,
-            fontWord: 2,
-            page_repeat: 'page',
-            reayah: 0,
+            surah: [], // array الآيات
+            par: Number, 
+            arrayAudio: jsonAudio.data, // array القراء
+            page: 0, // رقم الصفحة
+            ayah: 0, // رقم الآية
+            timeStop: 0, // مدة فترة السكون
+            valTime: false, // حالة فترة السكون 
+            inayah: 2, // عدد تكرار قراءة الآية
+            set_save: false, // حفظ مكان التوقف
+            isPlay: false, // play OR pause
+            isLoad: false, // Loading Page
+            // show: false, // Loading Page الاصدار القديم بأمكانك أزالته
+            tRead: Number, // رقم الآية التي يتم قرائتها في الوقت الفعلي
+            volume: 100,  // مستوى الصوت يقسم على واحد
+            fontSize: 16, // حجم الخط px
+            // fontWord: 2, // المسافة بين الكلمات px للأصدار القديم بأمكانك حذفه
+            /*
+            خاصية التكرار page_repeat
+            page -> تكرار قراءة الصفحة
+            ayah -> تكرار قراءة الآية
+            next -> قراءة صفحة صفحة
+            */
+            page_repeat: 'page', // خاصية التكرار 
+            /*
+            حالة التكرار reayah
+            0 -> لا يعمل false
+            1 -> يعمل true
+            */
+            reayah: 0, // حالة التكرار 
+            /*
+            مرتبط بخاصية التكرار options
+            وهي حالات او انواع الحالات
+            */
             options: [
                 { 
                     text: 'تكرار الصفحة',
@@ -239,23 +267,50 @@ export default {
             
             audio.onended = () => {
                 if (coun-1 > id && this.page_repeat == 'page' || coun-1 > id && this.page_repeat == 'next') {
-                    this.xplay(id+1)
-                }
-                else if (this.page_repeat == 'ayah') {
-                    if (this.reayah < this.inayah) {
-                        this.xplay(id)
-                        this.reayah++
-                    } else {
-                        this.reayah = 0
+                    if (this.valTime) {
+                        setTimeout(() => {
+                            this.xplay(id+1)
+                        }, (this.timeStop * 1000))
+                    }
+                    else {
                         this.xplay(id+1)
                     }
                 }
+                else if (this.page_repeat == 'ayah') {
+                    if (this.reayah < this.inayah) {
+                        if (this.valTime) {
+                            setTimeout(() => {
+                                this.xplay(id)
+                                this.reayah++
+                            }, (this.timeStop * 1000))
+                        } else {
+                            this.xplay(id)
+                            this.reayah++
+                        }
+                    } else {
+                        if (this.valTime) {
+                            setTimeout(() => {
+                                this.reayah = 0
+                                this.xplay(id+1)
+                            }, (this.timeStop * 1000))
+                        } else {
+                        this.reayah = 0
+                        this.xplay(id+1)
+                        }
+                    }
+                }
                 else if (this.page_repeat == 'page'){
-                    this.xplay(0)
+                    if (this.valTime) {
+                        setTimeout(() => {
+                            this.xplay(0)
+                        }, (this.timeStop * 1000))
+                    } else {
+                        this.xplay(0)
+                    }
                 }
                 else if (this.page_repeat == 'next'){
                     if (this.page <= 603) {
-                        this.$router.push('/'+(this.page+1))
+                        this.$router.push({name: 'Surah', params: {id: (this.page+1)}})
                     }
                     else {
                         this.$refs['modal'].show()
@@ -265,11 +320,11 @@ export default {
         },
         goLink(val = null) {
             this.setLoad(true)
-            this.$router.push('/'+(val ? this.page+1 : this.page-1))
+            this.$router.push({name: 'Surah', params: {id: (val ? this.page+1 : this.page-1)}})
         },
         goPage() {
             this.setLoad(true)
-            this.$router.push('/'+this.par)
+            this.$router.push({name: 'Surah', params: {id: this.par}})
         },
         repeat(val) {
             this.page_repeat = val
@@ -282,11 +337,11 @@ export default {
         page_number(val = null) {
             const ppage = this.page;
             if (val == 'add') {
-                this.$router.push('/' + (ppage + 1))
+                this.$router.push({name: 'Surah', params: {id: (ppage + 1)}})
             } else if (val == 'sub') {
-                this.$router.push('/' + (ppage - 1))
+                this.$router.push({name: 'Surah', params: {id: (ppage - 1)}})
             } else {
-                this.$router.push('/' + ppage)
+                this.$router.push({name: 'Surah', params: {id: ppage}})
             }
         },
         style(val) {
@@ -322,7 +377,7 @@ export default {
                 this.setLoad(true)
                 var page = Cookies.get('page')
                 var ayah = Cookies.get('ayah')
-                this.$router.push('/' + page + '/' + ayah)
+                this.$router.push({name: 'SurahId', params: {id: page, ayah: ayah}})
             }
         },
         save_play() {
@@ -337,6 +392,9 @@ export default {
         setLoad(val) {
             if (val) document.querySelector('.ayah.load').setAttribute('aria-load', 'true')
             else document.querySelector('.ayah.load').setAttribute('aria-load', 'false')
+        },
+        FunTimeStop() {
+            this.valTime = (this.valTime ? false : true)
         }
     },
     mounted() {

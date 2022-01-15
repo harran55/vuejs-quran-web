@@ -54,6 +54,7 @@
 
 * {
     transition: all .6s;
+    scroll-behavior: smooth;
     ::-webkit-scrollbar {
         width: 10px;
         height: 6px;
@@ -73,6 +74,7 @@ body {
     direction: rtl;
     background: var(--qjs-background);
     font-family: 'Noto Sans Arabic', sans-serif;
+    scroll-behavior: smooth;
     transition: all .6s;
     .page {
         .card {
@@ -248,6 +250,7 @@ body {
                     width: max-content;
                     font-family: 'Noto Sans Arabic';
                     height: 32px;
+                    scroll-behavior: smooth;
                     li {
                         display: inline-block;
                         font-size: 12px;
