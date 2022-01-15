@@ -2,6 +2,9 @@
 
 <img src="./src/assets/test.png" alt="vue js quran web">
 
+الاصدار الجديد من تطبيق الويب القرآن الكريم
+[مشاهدة التطبيق](https://vuejs-quran.web.app/)
+
 ## Project setup
 ```
 npm install
