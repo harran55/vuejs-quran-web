@@ -1,4 +1,4 @@
-# quranjs
+# vuejs quran
 
 <img src="./src/assets/test.png" alt="vue js quran web">
 
