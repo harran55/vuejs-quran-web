@@ -5,6 +5,11 @@
 الاصدار الجديد من تطبيق الويب القرآن الكريم
 [مشاهدة التطبيق](https://vuejs-quran.web.app/)
 
+## تعديل مسار التطبيق
+```html
+<meta name="url" content="/example/">
+```
+
 ## Project setup
 ```
 npm install
